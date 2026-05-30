@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Preguntas de Lógica de Sistemas</title>
+
+<style>
+
+body{
+    font-family: Arial, sans-serif;
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+}
+
+h1{
+    text-align:center;
+}
+
+textarea{
+    width:100%;
+    height:120px;
+    margin-top:10px;
+}
+
+button{
+    margin-top:15px;
+    padding:10px 20px;
+}
+
+</style>
+</head>
+<body>
+
+<h1>Preguntas de Lógica de Sistemas</h1>
+
+<h2 id="pregunta"></h2>
+
+<textarea
+id="respuesta"
+placeholder="Escribe tu respuesta aquí">
+</textarea>
+
+<br>
+
+<button onclick="siguientePregunta()">
+Guardar y Continuar
+</button>
+
+<script>
+
+const preguntas = [
+
+"¿Qué entiende por Álgebra de Boole y cuál considera que es su importancia en la informática?",
+
+"¿Qué son los bloqueos mentales y cómo pueden afectar la toma de decisiones?",
+
+"¿Cómo puede la creatividad ayudar en la solución de problemas dentro de un sistema?",
+
+"¿Qué es una falacia y por qué es importante reconocerla al momento de razonar?",
+
+"Explique cómo aplicaría la lógica para resolver un problema de la vida cotidiana."
+
+];
+
+let indice = 0;
+
+let respuestas = [];
+
+document.getElementById("pregunta").innerText =
+preguntas[indice];
+
+function siguientePregunta(){
+
+    let respuesta =
+    document.getElementById("respuesta").value;
+
+    respuestas.push({
+        pregunta: preguntas[indice],
+        respuesta: respuesta
+    });
+
+    indice++;
+
+    if(indice < preguntas.length){
+
+        document.getElementById("pregunta")
+        .innerText = preguntas[indice];
+
+        document.getElementById("respuesta")
+        .value = "";
+
+    }else{
+
+        localStorage.setItem(
+        "respuestasLogica",
+        JSON.stringify(respuestas)
+        );
+
+        document.body.innerHTML = `
+
+        <h1>¡Actividad Finalizada!</h1>
+
+        <p>Sus respuestas han sido guardadas correctamente.</p>
+
+        <button onclick="mostrarRespuestas()">
+        Ver Respuestas
+        </button>
+
+        `;
+    }
+
+}
+
+function mostrarRespuestas(){
+
+    let datos =
+    JSON.parse(
+    localStorage.getItem("respuestasLogica")
+    );
+
+    let contenido =
+    "<h1>Respuestas Guardadas</h1>";
+
+    datos.forEach((item, i)=>{
+
+        contenido += `
+        <h3>Pregunta ${i+1}</h3>
+        <p><b>${item.pregunta}</b></p>
+        <p>${item.respuesta}</p>
+        <hr>
+        `;
+
+    });
+
+    document.body.innerHTML = contenido;
+
+}
+
+</script>
+
+</body>
+</html>
