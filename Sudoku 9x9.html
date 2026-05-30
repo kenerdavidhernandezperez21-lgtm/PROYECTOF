@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sudoku 9x9</title>
+
+<style>
+
+body{
+    font-family: Arial, sans-serif;
+    background:#f4f4f4;
+    text-align:center;
+}
+
+h1{
+    color:#003366;
+}
+
+table{
+    margin:auto;
+    border-collapse:collapse;
+}
+
+td{
+    border:1px solid black;
+}
+
+input{
+    width:50px;
+    height:50px;
+    text-align:center;
+    font-size:20px;
+    border:none;
+}
+
+.fija{
+    background:#d9e6f2;
+    font-weight:bold;
+}
+
+button{
+    margin-top:20px;
+    padding:10px 20px;
+    font-size:18px;
+    background:#003366;
+    color:white;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#0055aa;
+}
+
+</style>
+</head>
+<body>
+
+<h1>Sudoku 9x9</h1>
+
+<p>En este juego de lógica cuyo objetivo es rellenar una cuadrícula de 9*9 casillas con números del 1 al 9  Cada fila, columna y subcuadrícula de 3*3</p>
+<p>Reglas</p>
+<p>1. Busca los espacios más vacíos: Empieza por los bloques o líneas que ya tengan más números para descubrir cuáles faltan.</p>
+<p>2. Usa la lógica de eliminación: Si en una casilla intentas colocar un número, revisa que no esté ya en esa misma fila, columna o bloque. Si ya existe, prueba con otro.</p>
+<p>3. Revisa los números: Elige un número del 1 al 9 y observa en qué bloques ya está. Eso te ayudará a deducir en qué bloques vecinos aún falta por colocarse.</p>
+<table id="sudoku"></table>
+
+<button onclick="verificarSudoku()">
+Verificar
+</button>
+
+<p id="resultado"></p>
+
+<script>
+
+const tablero = [
+[5,3,0,0,7,0,0,0,0],
+[6,0,0,1,9,5,0,0,0],
+[0,9,8,0,0,0,0,6,0],
+[8,0,0,0,6,0,0,0,3],
+[4,0,0,8,0,3,0,0,1],
+[7,0,0,0,2,0,0,0,6],
+[0,6,0,0,0,0,2,8,0],
+[0,0,0,4,1,9,0,0,5],
+[0,0,0,0,8,0,0,7,9]
+];
+
+const solucion = [
+[5,3,4,6,7,8,9,1,2],
+[6,7,2,1,9,5,3,4,8],
+[1,9,8,3,4,2,5,6,7],
+[8,5,9,7,6,1,4,2,3],
+[4,2,6,8,5,3,7,9,1],
+[7,1,3,9,2,4,8,5,6],
+[9,6,1,5,3,7,2,8,4],
+[2,8,7,4,1,9,6,3,5],
+[3,4,5,2,8,6,1,7,9]
+];
+
+const tabla = document.getElementById("sudoku");
+
+for(let i=0;i<9;i++){
+
+    let fila = document.createElement("tr");
+
+    for(let j=0;j<9;j++){
+
+        let celda = document.createElement("td");
+        let input = document.createElement("input");
+
+        if(tablero[i][j] !== 0){
+            input.value = tablero[i][j];
+            input.readOnly = true;
+            input.classList.add("fija");
+        }
+
+        input.id = `${i}-${j}`;
+
+        if(j===2 || j===5){
+            celda.style.borderRight="3px solid black";
+        }
+
+        if(i===2 || i===5){
+            celda.style.borderBottom="3px solid black";
+        }
+
+        celda.appendChild(input);
+        fila.appendChild(celda);
+
+    }
+
+    tabla.appendChild(fila);
+
+}
+
+function verificarSudoku(){
+
+    let correcto = true;
+
+    for(let i=0;i<9;i++){
+
+        for(let j=0;j<9;j++){
+
+            let valor =
+            document.getElementById(`${i}-${j}`).value;
+
+            if(Number(valor)!==solucion[i][j]){
+                correcto=false;
+            }
+
+        }
+
+    }
+
+    if(correcto){
+
+        document.getElementById("resultado").innerHTML=
+        "¡Felicidades! Sudoku completado correctamente.";
+
+    }else{
+
+        document.getElementById("resultado").innerHTML=
+        "Hay errores o casillas vacías.";
+
+    }
+
+}
+
+</script>
+
+</body>
+</html>

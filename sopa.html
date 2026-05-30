@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Sopa de Letras - Lógica de Sistemas</title>
+
+<style>
+
+body{
+    font-family: Arial, sans-serif;
+    text-align:center;
+    background:#f4f4f4;
+}
+
+h1{
+    color:#003366;
+}
+
+table{
+    margin:auto;
+    border-collapse:collapse;
+}
+
+td{
+    width:45px;
+    height:45px;
+    border:1px solid black;
+    text-align:center;
+    font-size:22px;
+    font-weight:bold;
+    cursor:pointer;
+    user-select:none;
+    background:white;
+}
+
+.seleccionada{
+    background:yellow;
+}
+
+.encontrada{
+    background:green;
+    color:white;
+}
+
+ul{
+    display:inline-block;
+    text-align:left;
+}
+
+#siguiente{
+    display:none;
+    margin-top:20px;
+    padding:10px 20px;
+    font-size:18px;
+}
+
+</style>
+
+</head>
+<body>
+
+<h1>PROYECTO FINAL - LÓGICA DE SISTEMAS</h1>
+
+<h2>Sopa de Letras</h2>
+
+<h3>Palabras a encontrar</h3>
+
+<p>En este juego nos dedicaremos a encontrar los temas que se vieron en nuestro primer semestre</p>
+<ul>
+    <li id="BOOLE">BOOLE</li>
+    <li id="BLOQUEO">BLOQUEO</li>
+    <li id="FALACIA">FALACIA</li>
+    <li id="PROBLEMAS">PROBLEMAS</li>
+    <li id="CREATIVIDAD">CREATIVIDAD</li>
+</ul>
+
+<br><br>
+
+<table id="sopa">
+
+<tr>
+<td>B</td><td>O</td><td>O</td><td>L</td><td>E</td><td>X</td><td>F</td><td>A</td><td>T</td><td>A</td>
+</tr>
+
+<tr>
+<td>A</td><td>B</td><td>X</td><td>N</td><td>T</td><td>Y</td><td>E</td><td>Y</td><td>A</td><td>T</td>
+</tr>
+
+<tr>
+<td>B</td><td>L</td><td>O</td><td>Q</td><td>U</td><td>E</td><td>O</td><td>J</td><td>X</td><td>J</td>
+</tr>
+
+<tr>
+<td>I</td><td>I</td><td>T</td><td>Y</td><td>O</td><td>I</td><td>U</td><td>L</td><td>M</td><td>K</td>
+</tr>
+
+<tr>
+<td>F</td><td>A</td><td>L</td><td>A</td><td>C</td><td>I</td><td>A</td><td>X</td><td>X</td><td>X</td>
+</tr>
+
+<tr>
+<td>T</td><td>K</td><td>X</td><td>F</td><td>Y</td><td>K</td><td>X</td><td>K</td><td>D</td><td>K</td>
+</tr>
+
+<tr>
+<td>P</td><td>R</td><td>O</td><td>B</td><td>L</td><td>E</td><td>M</td><td>A</td><td>S</td><td>X</td>
+</tr>
+
+<tr>
+<td>T</td><td>W</td><td>I</td><td>M</td><td>Q</td><td>P</td><td>Z</td><td>X</td><td>Y</td><td>D</td>
+</tr>
+
+<tr>
+<td>C</td><td>R</td><td>E</td><td>A</td><td>T</td><td>I</td><td>V</td><td>I</td><td>D</td><td>A</td>
+</tr>
+
+<tr>
+<td>D</td><td>H</td><td>U</td><td>A</td><td>X</td><td>F</td><td>H</td><td>J</td><td>M</td><td>G</td>
+</tr>
+
+</table>
+
+<h3>Palabra seleccionada:</h3>
+<p id="actual"></p>
+
+<button id="siguiente"
+onclick="location.href='Sudoku 9x9.html'">
+Ir al otro juego 
+</button>
+
+<script>
+
+let seleccionadas = [];
+
+let encontradas = 0;
+
+const palabras = [
+"BOOLE",
+"BLOQUEO",
+"FALACIA",
+"PROBLEMAS",
+"CREATIVIDAD"
+];
+
+document.querySelectorAll("#sopa td").forEach(celda => {
+
+    celda.addEventListener("click", () => {
+
+        if(celda.classList.contains("encontrada")){
+            return;
+        }
+
+        celda.classList.toggle("seleccionada");
+
+        if(celda.classList.contains("seleccionada")){
+            seleccionadas.push(celda);
+        }else{
+            seleccionadas =
+            seleccionadas.filter(x => x !== celda);
+        }
+
+        revisarPalabra();
+
+    });
+
+});
+
+function revisarPalabra(){
+
+    let palabra =
+    seleccionadas.map(c=>c.textContent).join("");
+
+    document.getElementById("actual").textContent =
+    palabra;
+
+    if(palabras.includes(palabra)){
+
+        seleccionadas.forEach(c=>{
+
+            c.classList.remove("seleccionada");
+            c.classList.add("encontrada");
+
+        });
+
+        document.getElementById(palabra)
+        .style.textDecoration="line-through";
+
+        localStorage.setItem(
+        palabra,
+        "encontrada"
+        );
+
+        encontradas++;
+
+        seleccionadas=[];
+
+        document.getElementById("actual")
+        .textContent="";
+
+        verificarFinal();
+
+    }
+
+}
+
+function verificarFinal(){
+
+    if(encontradas >= 5){
+
+        alert(
+        "¡Felicidades! Has encontrado todas las palabras."
+        );
+
+        document.getElementById("siguiente")
+        .style.display="inline-block";
+
+    }
+
+}
+
+window.onload=()=>{
+
+    palabras.forEach(p=>{
+
+        if(localStorage.getItem(p)){
+
+            document.getElementById(p)
+            .style.textDecoration="line-through";
+
+        }
+
+    });
+
+};
+
+</script>
+
+</body>
+</html>
